@@ -13,45 +13,48 @@ let gear = "https://raw.githubusercontent.com/oreg-kh/Unit-and-building-simulato
 let token = atob("ZjRiNDIzZWE4MzgxMDJmZmNkMTdmY2M4MDdmY2Y1MTkxZjlkN2I5Yw==");
 const obj = {buildingsObj: {}, unitsObj: {}, world: {}};
 let errorText = {
-        buildings: "A busca de dados dos edifícios falhou! Tente novamente.",
-        units: "A busca de dados das unidades falhou! Tente novamente.",
-        unitsCost: "A busca de custos das unidades falhou! Tente novamente.",
-        speed: "A busca da velocidade do servidor falhou! Tente novamente."
+        buildings: "Az Ã©pÃ¼letek adatainak lekÃ©rdezÃ©se a szerverrÅ‘l sikertelen volt! PrÃ³bÃ¡ld meg kÃ©sÅ‘bb.",
+        units: "Az egysÃ©gek adatainak lekÃ©rdezÃ©se a szerverrÅ‘l sikertelen volt! PrÃ³bÃ¡ld meg kÃ©sÅ‘bb.",
+        unitsCost: "Az egysÃ©gek nyersanyag kÃ¶ltsÃ©gÃ©nek lekÃ©rdezÃ©se a szerverrÅ‘l sikertelen volt! PrÃ³bÃ¡ld meg kÃ©sÅ‘bb.",
+        speed: "A szerver sebessÃ©gÃ©nek lekÃ©rdezÃ©se a szerverrÅ‘l sikertelen volt! PrÃ³bÃ¡ld meg kÃ©sÅ‘bb."
 };
 let prompts = {
-        text: [`Este código pode ser usado para importar configurações.`,
+        text: [`Ezt a kÃ³dot importÃ¡lÃ¡skor lehet hasznÃ¡lni.`,
                `\n`,
                `\n`,
-               `Ajuda a salvar seu perfil ou enviar para outros jogadores.`,
+               `SegÃ­tsÃ©gÃ©vel elmentheted a profilodat vagy elkÃ¼ldheted mÃ¡snak.`,
                `\n`,
-               `Copiar: CTRL+C.`].join('')
+               `MÃ¡solÃ¡s a vÃ¡gÃ³lapra: CTRL+C.`].join('')
 };
 let helpTooltip = {
-        resource: [`Bônus de Recursos:`,
+        resource: [`Nyersanyag bÃ³nusz:`,
                    `<br/>`,
                    `<br/>`,
-                   ` :: Define a porcentagem de bônus para madeira, argila e ferro.`].join(''),
-        pop: [`Bônus de População:`,
+                   ` :: Itt adhatÃ³ meg, hÃ¡ny szÃ¡zalÃ©kkal van megnÃ¶velve a fa, agyag Ã©s vas termelÃ©se.`].join(''),
+        pop: [`NÃ©pessÃ©g bÃ³nusz:`,
                    `<br/>`,
                    `<br/>`,
-                   ` :: Define o bônus de capacidade da fazenda.`,
-                   ` :: Configurações para aldeia bônus, bandeira e itens.`].join(''),
-        haul: [`Bônus de Saque:`,
+                   ` :: Itt adhatÃ³ meg, hÃ¡ny szÃ¡zalÃ©kkal van megnÃ¶velve a tanya kapacitÃ¡sa.`,
+                   ` :: KÃ¼lÃ¶n beÃ¡llÃ­thatÃ³ bÃ³nuszfalu, zÃ¡szlÃ³ Ã©s leltÃ¡ros nÃ¶velÅ‘.`].join(''),
+        haul: [`TeherbÃ­rÃ¡s bÃ³nusz:`,
                    `<br/>`,
                    `<br/>`,
-                   ` :: Define o bônus de capacidade de carga das unidades.`].join(''),
-        recruit: [`Bônus de Recrutamento:`,
+                   ` :: Itt adhatÃ³ meg, hÃ¡ny szÃ¡zalÃ©kkal van megnÃ¶velve az egysÃ©gek szÃ¡llÃ­tÃ¡si kapacitÃ¡sa.`,
+                   ` :: KÃ¼lÃ¶n beÃ¡llÃ­thatÃ³ zÃ¡szlÃ³ Ã©s leltÃ¡ros nÃ¶velÅ‘.`].join(''),
+        recruit: [`KÃ©pzÃ©s bÃ³nusz:`,
                    `<br/>`,
                    `<br/>`,
-                   ` :: Aumenta a velocidade de treino no quartel, estábulo e oficina.`].join(''),
-        market: [`Bônus de Mercado:`,
+                   ` :: Itt adhatÃ³ meg, hÃ¡ny szÃ¡zalÃ©kkal van megnÃ¶velve a barakk, istÃ¡llÃ³, mÅ±hely Ã©s akadÃ©mia kÃ©pzÃ©si sebessÃ©ge.`].join(''),
+        market: [`Piac bÃ³nusz:`,
                    `<br/>`,
                    `<br/>`,
-                   ` :: Aumenta o número de mercadores disponíveis.`].join(''),
-        storage: [`Bônus de Armazém:`,
+                   ` :: Itt adhatÃ³ meg, hÃ¡ny szÃ¡zalÃ©kkal van megnÃ¶velve a kereskedÅ‘k szÃ¡ma.`,
+                   ` :: KÃ¼lÃ¶n beÃ¡llÃ­thatÃ³ bÃ³nuszfalu Ã©s leltÃ¡ros nÃ¶velÅ‘.`].join(''),
+        storage: [`RaktÃ¡r bÃ³nusz:`,
                    `<br/>`,
                    `<br/>`,
-                   ` :: Aumenta a capacidade máxima do armazém.`].join('')
+                   ` :: Itt adhatÃ³ meg, hÃ¡ny szÃ¡zalÃ©kkal van megnÃ¶velve a raktÃ¡r kapacitÃ¡sa.`,
+                   ` :: KÃ¼lÃ¶n beÃ¡llÃ­thatÃ³ bÃ³nuszfalu Ã©s leltÃ¡ros nÃ¶velÅ‘.`].join('')
 }
 let game = window.image_base;
 let imageSrc = {
@@ -106,16 +109,16 @@ content = `
             <table class="inlineTable modes">
 		        <tbody>
 			        <tr>
-				        <th>Construção</th>
-				        <th>Nível</th>
-				        <th>Mad.</th>
-				        <th>Arg.</th>
-				        <th>Fer.</th>
-				        <th>Pop.</th>
-				        <th>Pts.</th>
+				        <th>Ã‰pÃ­tÃ©s</th>
+				        <th>Szint</th>
+				        <th>Fa</th>
+				        <th>Agyag</th>
+				        <th>Vas</th>
+				        <th>NÃ©pessÃ©g</th>
+				        <th>Pont</th>
 			        </tr>
 			        <tr>
-				        <td><img src=${imageSrc.main}>Edifício Principal</td>
+				        <td><img src=${imageSrc.main}>FÅ‘hadiszÃ¡llÃ¡s</td>
 				        <td><input type="number" id="headquarters" class="building" maxlength="2" min="1" max="30" autofocus></td>
 				        <td class="woodCost">0</td>
 				        <td class="stoneCost">0</td>
@@ -124,7 +127,7 @@ content = `
 				        <td class="points">0</td>
 			        </tr>
 			        <tr>
-				        <td><img src=${imageSrc.barracks}>Quartel</td>
+				        <td><img src=${imageSrc.barracks}>Barakk</td>
 				        <td><input type="number" id="barracks" class="building" maxlength="2" min="0" max="25"></td>
 				        <td class="woodCost">0</td>
 				        <td class="stoneCost">0</td>
@@ -133,7 +136,7 @@ content = `
 				        <td class="points">0</td>
 			        </tr>
 			        <tr>
-				        <td><img src=${imageSrc.stable}>Estábulo</td>
+				        <td><img src=${imageSrc.stable}>IstÃ¡llÃ³</td>
 				        <td><input type="number" id="stable" class="building" maxlength="2" min="0" max="20"></td>
 				        <td class="woodCost">0</td>
 				        <td class="stoneCost">0</td>
@@ -142,7 +145,7 @@ content = `
 				        <td class="points">0</td>
                     		</tr>
 			        <tr>
-				        <td><img src=${imageSrc.garage}>Oficina</td>
+				        <td><img src=${imageSrc.garage}>MÅ±hely</td>
 				        <td><input type="number" id="garage" class="building" maxlength="2" min="0" max="15"></td>
 				        <td class="woodCost">0</td>
 				        <td class="stoneCost">0</td>
@@ -151,7 +154,7 @@ content = `
 				        <td class="points">0</td>
 			        </tr>
 			        <tr>
-				        <td><img src=${imageSrc.church}>Igreja</td>
+				        <td><img src=${imageSrc.church}>Templom</td>
 				        <td><input type="number" id="church" class="building" maxlength="1" min="0" max="3"></td>
 				        <td class="woodCost">0</td>
 				        <td class="stoneCost">0</td>
@@ -160,7 +163,7 @@ content = `
 				        <td class="points">0</td>
 			        </tr>
 			        <tr>
-				        <td><img src=${imageSrc.church_f}>Primeira Igreja</td>
+				        <td><img src=${imageSrc.church_f}>ElsÅ‘ templom</td>
 				        <td><input type="number" id="church_f" class="building" maxlength="1" min="0" max="1"></td>
 				        <td class="woodCost">0</td>
 				        <td class="stoneCost">0</td>
@@ -169,7 +172,7 @@ content = `
 				        <td class="points">0</td>
 			        </tr>
 			        <tr>
-				        <td><img src=${imageSrc.watchtower}>Torre de Vigia</td>
+				        <td><img src=${imageSrc.watchtower}>Årtorony</td>
 				        <td><input type="number" id="watchtower" class="building" maxlength="2" min="0" max="20"></td>
 				        <td class="woodCost">0</td>
 				        <td class="stoneCost">0</td>
@@ -178,7 +181,7 @@ content = `
 				        <td class="points">0</td>
 			        </tr>
                     		<tr>
-				        <td><img src=${imageSrc.academy}>Academia</td>
+				        <td><img src=${imageSrc.academy}>AkadÃ©mia</td>
 				        <td><input type="number" id="academy" class="building" maxlength="1" min="0" max="1"></td>
 				        <td class="woodCost">0</td>
 				        <td class="stoneCost">0</td>
@@ -187,7 +190,7 @@ content = `
 				        <td class="points">0</td>
                     		</tr>
 			        <tr>
-				        <td><img src=${imageSrc.smith}>Ferreiro</td>
+				        <td><img src=${imageSrc.smith}>KovÃ¡csmÅ±hely</td>
 				        <td><input type="number" id="smith" class="building" maxlength="2" min="0" max="20"></td>
 				        <td class="woodCost">0</td>
 				        <td class="stoneCost">0</td>
@@ -196,7 +199,7 @@ content = `
 				        <td class="points">0</td>
 			        </tr>
 			        <tr>
-				        <td><img src=${imageSrc.place}>Praça de Reunião</td>
+				        <td><img src=${imageSrc.place}>GyÃ¼lekezÅ‘hely</td>
 				        <td><input type="number" id="place" class="building" maxlength="1" min="0" max="1"></td>
 				        <td class="woodCost">0</td>
 				        <td class="stoneCost">0</td>
@@ -205,7 +208,7 @@ content = `
 				        <td class="points">0</td>
 			        </tr>
 			        <tr>
-				        <td><img src=${imageSrc.statue}>Estátua</td>
+				        <td><img src=${imageSrc.statue}>Szobor</td>
 				        <td><input type="number" id="statue" class="building" maxlength="1" min="0" max="1"></td>
 				        <td class="woodCost">0</td>
 				        <td class="stoneCost">0</td>
@@ -214,7 +217,7 @@ content = `
 				        <td class="points">0</td>
 			        </tr>
 			        <tr>
-				        <td><img src=${imageSrc.market}>Mercado</td>
+				        <td><img src=${imageSrc.market}>Piac</td>
 				        <td><input type="number" id="market" class="building" maxlength="2" min="0" max="25"></td>
 				        <td class="woodCost">0</td>
 				        <td class="stoneCost">0</td>
@@ -223,7 +226,7 @@ content = `
 				        <td class="points">0</td>
 			        </tr>
 			        <tr>
-				        <td><img src=${imageSrc.timber_camp}>Bosque</td>
+				        <td><img src=${imageSrc.timber_camp}>FavÃ¡gÃ³</td>
 				        <td><input type="number" id="timber_camp" class="building" maxlength="2" min="0" max="30"></td>
 				        <td class="woodCost">0</td>
 				        <td class="stoneCost">0</td>
@@ -232,7 +235,7 @@ content = `
 				        <td class="points">0</td>
 			        </tr>
 			        <tr>
-				        <td><img src=${imageSrc.clay_pit}>Poço de Argila</td>
+				        <td><img src=${imageSrc.clay_pit}>AgyagbÃ¡nya</td>
 				        <td><input type="number" id="clay_pit" class="building" maxlength="2" min="0" max="30"></td>
 				        <td class="woodCost">0</td>
 				        <td class="stoneCost">0</td>
@@ -241,7 +244,7 @@ content = `
 				        <td class="points">0</td>
 			        </tr>
 			        <tr>
-				        <td><img src=${imageSrc.iron_mine}>Mina de Ferro</td>
+				        <td><img src=${imageSrc.iron_mine}>VasbÃ¡nya</td>
 				        <td><input type="number" id="iron_mine" class="building" maxlength="2" min="0" max="30"></td>
 				        <td class="woodCost">0</td>
 				        <td class="stoneCost">0</td>
@@ -250,7 +253,7 @@ content = `
 				        <td class="points">0</td>
 			        </tr>
 			        <tr>
-				        <td><img src=${imageSrc.farm}>Fazenda</td>
+				        <td><img src=${imageSrc.farm}>Tanya</td>
 				        <td><input type="number" id="farm" class="building" maxlength="2" min="1" max="30"></td>
 				        <td class="woodCost">0</td>
 				        <td class="stoneCost">0</td>
@@ -259,7 +262,7 @@ content = `
 				        <td class="points">0</td>
 			        </tr>
 			        <tr>
-				        <td><img src=${imageSrc.warehouse}>Armazém</td>
+				        <td><img src=${imageSrc.warehouse}>RaktÃ¡r</td>
 				        <td><input type="number" id="warehouse" class="building" maxlength="2" min="1" max="30"</td>
 				        <td class="woodCost">0</td>
 				        <td class="stoneCost">0</td>
@@ -268,7 +271,7 @@ content = `
 				        <td class="points">0</td>
 			        </tr>
 			        <tr>
-				        <td><img src=${imageSrc.hide}>Esconderijo</td>
+				        <td><img src=${imageSrc.hide}>Rejtekhely</td>
 				        <td><input type="number" id="hide" class="building" maxlength="2" min="0" max="10"></td>
 				        <td class="woodCost">0</td>
 				        <td class="stoneCost">0</td>
@@ -277,7 +280,7 @@ content = `
 				        <td class="points">0</td>
 			        </tr>
 			        <tr>
-				        <td><img src=${imageSrc.wall}>Muralha</td>
+				        <td><img src=${imageSrc.wall}>Fal</td>
 				        <td><input type="number" id="wall" class="building" maxlength="2" min="0" max="20"></td>
 				        <td class="woodCost">0</td>
 				        <td class="stoneCost">0</td>
@@ -291,14 +294,14 @@ content = `
 				        <td><img src=${imageSrc.wood}>&nbsp<span id="currentBuildingsWoodCost">0</span></td>
 				        <td><img src=${imageSrc.stone}>&nbsp<span id="currentBuildingsStoneCost">0</span></td>
 				        <td><img src=${imageSrc.iron}>&nbsp<span id="currentBuildingsIronCost">0</span></td>
-				        <td class="crosshatchedright" colspan="2">&#x21E6; Custos dos níveis atuais</td>
+				        <td class="crosshatchedright" colspan="2">&#x21E6; AktuÃ¡lis szintek kÃ¶ltsÃ©gei</td>
 			        </tr>
 			        <tr>
-				        <td class="crosshatchedleft">Nível Mínimo:</td>
+				        <td class="crosshatchedleft">Minimum szint:</td>
 				        <td style="text-align:center"><input type="radio" id="minimum" onclick="minimum()" name="name"></td>
 			        </tr>
 			        <tr>
-				        <td class="crosshatchedright">Nível Máximo:</td>
+				        <td class="crosshatchedright">Maximum szint:</td>
 				        <td style="text-align:center"><input type="radio" id="maximum" onclick="maximum()" name="name"></td>
 			        </tr>
 		        </tbody>
@@ -308,15 +311,15 @@ content = `
 	        <table class="inlineTable">
 		        <tbody>
 			        <tr>
-				        <th>Unidade</th>
-				        <th>Quantia</th>
-				        <th>Tempo de Treino</th>
-				        <th>Por Edifício</th>
-				        <th>Carga</th>
-				        <th>Pop.</th>
+				        <th>EgysÃ©g</th>
+				        <th>MennyisÃ©g</th>
+				        <th>KÃ©pzÃ©si idÅ‘</th>
+				        <th>Ã‰pÃ¼letenkÃ©nt</th>
+				        <th>SzÃ¡llÃ­tÃ¡si kapacitÃ¡s</th>
+				        <th>Tanyahely</th>
 			        </tr>
 			        <tr>
-				        <td><img src=${imageSrc.spear}>Lanceiro</td>
+				        <td><img src=${imageSrc.spear}>LÃ¡ndzsÃ¡s</td>
 				        <td><input type="number" id="spear" class="unit" maxlength="5" min="0" max="32000"></td>
 				        <td>
                             <span>
@@ -329,7 +332,7 @@ content = `
 				        <td class="pop">0</td>
 			        </tr>
 			        <tr>
-				        <td><img src=${imageSrc.sword}>Espadachim</td>
+				        <td><img src=${imageSrc.sword}>Kardos</td>
 				        <td><input type="number" id="sword" class="unit" maxlength="5" min="0" max="32000"></td>
 				        <td>
                             <span>
@@ -341,7 +344,7 @@ content = `
 				        <td class="pop">0</td>
 			        </tr>
 			        <tr>
-				        <td><img src=${imageSrc.axe}>Bárbaro</td>
+				        <td><img src=${imageSrc.axe}>BÃ¡rdos</td>
 				        <td><input type="number" id="axe" class="unit" maxlength="5" min="0" max="32000"></td>
 				        <td>
                             <span>
@@ -353,7 +356,7 @@ content = `
 				        <td class="pop">0</td>
 			        </tr>
 			        <tr>
-				        <td><img src=${imageSrc.archer}>Arqueiro</td>
+				        <td><img src=${imageSrc.archer}>ÃjÃ¡sz</td>
 				        <td><input type="number" id="archer" class="unit" maxlength="5" min="0" max="32000"></td>
 				        <td>
                             <span>
@@ -365,7 +368,7 @@ content = `
 				        <td class="pop">0</td>
 			        </tr>
 			        <tr>
-				        <td><img src=${imageSrc.spy}>Explorador</td>
+				        <td><img src=${imageSrc.spy}>KÃ©m</td>
 				        <td><input type="number" id="spy" class="unit" maxlength="5" min="0" max="32000"></td>
 				        <td>
                             <span>
@@ -378,7 +381,7 @@ content = `
 				        <td class="pop">0</td>
 			        </tr>
 			        <tr>
-				        <td><img src=${imageSrc.light}>Cavalaria Leve</td>
+				        <td><img src=${imageSrc.light}>KÃ¶nnyÅ±lovas</td>
 				        <td><input type="number" id="light" class="unit" maxlength="5" min="0" max="32000"></td>
 				        <td>
                             <span>
@@ -390,7 +393,7 @@ content = `
 				        <td class="pop">0</td>
 			        </tr>
 			        <tr>
-				        <td><img src=${imageSrc.marcher}>Arqueiro a Cavalo</td>
+				        <td><img src=${imageSrc.marcher}>LovasÃ­jÃ¡sz</td>
 				        <td><input type="number" id="marcher" class="unit" maxlength="5" min="0" max="32000"></td>
 				        <td>
                             <span>
@@ -402,7 +405,7 @@ content = `
 				        <td class="pop">0</td>
 			        </tr>
 			        <tr>
-				        <td><img src=${imageSrc.heavy}>Cavalaria Pesada</td>
+				        <td><img src=${imageSrc.heavy}>NehÃ©zlovas</td>
 				        <td><input type="number" id="heavy" class="unit" maxlength="5" min="0" max="32000"></td>
 				        <td>
                             <span>
@@ -414,7 +417,7 @@ content = `
 				        <td class="pop">0</td>
 			        </tr>
 			        <tr>
-				        <td><img src=${imageSrc.ram}>Aríete</td>
+				        <td><img src=${imageSrc.ram}>FaltÃ¶rÅ‘ kos</td>
 				        <td><input type="number" id="ram" class="unit" maxlength="5" min="0" max="32000"></td>
 				        <td>
                             <span>
@@ -427,7 +430,7 @@ content = `
 				        <td class="pop">0</td>
 			        </tr>
 			        <tr>
-				        <td><img src=${imageSrc.catapult}>Catapulta</td>
+				        <td><img src=${imageSrc.catapult}>Katapult</td>
 				        <td><input type="number" id="catapult" class="unit" maxlength="5" min="0" max="32000"></td>
 				        <td>
                             <span>
@@ -439,7 +442,7 @@ content = `
 				        <td class="pop">0</td>
 			        </tr>
 			        <tr>
-				        <td><img src=${imageSrc.knight}>Paladino</td>
+				        <td><img src=${imageSrc.knight}>Lovag</td>
 				        <td><input type="number" id="knight" class="unit" maxlength="5" min="0" max="32000"></td>
 				        <td>
                             <span>
@@ -452,7 +455,7 @@ content = `
 				        <td class="pop">0</td>
 			        </tr>
 			        <tr>
-				        <td><img src=${imageSrc.snob}>Nobre</td>
+				        <td><img src=${imageSrc.snob}>Nemes</td>
 				        <td><input type="number" id="snob" class="unit" maxlength="5" min="0" max="32000"></td>
 				        <td>
                             <span>
@@ -465,7 +468,7 @@ content = `
 				        <td class="pop">0</td>
 			        </tr>
 			        <tr class="spaceUnder">
-				        <td><img src=${imageSrc.militia}>Milícia</td>
+				        <td><img src=${imageSrc.militia}>MilÃ­cia</td>
 				        <td><input type="number" id="militia" class="unit" maxlength="5" min="0" max="32000"></td>
 				        <td>
                             <span>
@@ -483,11 +486,11 @@ content = `
             <table class="inlineTable bonus">
                 <tbody>
 			        <tr>
-                        <th colspan="3">Bônus Recursos<img src=${imageSrc.questionMark} title="${helpTooltip.resource}" class="tooltip"></th>
+                        <th colspan="3">Nyersanyag bÃ³nusz<img src=${imageSrc.questionMark} title="${helpTooltip.resource}" class="tooltip"></th>
                         <th class="space"></th>
-                        <th colspan="3">Bônus População<img src=${imageSrc.questionMark} title="${helpTooltip.pop}" class="tooltip"></th>
+                        <th colspan="3">NÃ©pessÃ©g bÃ³nusz<img src=${imageSrc.questionMark} title="${helpTooltip.pop}" class="tooltip"></th>
                         <th class="space"></th>
-                        <th colspan="2">Bônus Carga<img src=${imageSrc.questionMark} title="${helpTooltip.haul}" class="tooltip"></th>
+                        <th colspan="2">TeherbÃ­rÃ¡s bÃ³nusz<img src=${imageSrc.questionMark} title="${helpTooltip.haul}" class="tooltip"></th>
                     </tr>
 			        <tr>
 				        <td><img src=${imageSrc.timber_camp}><input class="bon" id="woodBonus" type="number" min="0" max="500" value="0"></td>
@@ -507,11 +510,11 @@ content = `
             <table class="inlineTable bonus">
                 <tbody>
                     <tr>
-                        <th colspan="4">Bônus Treino<img src=${imageSrc.questionMark} title="${helpTooltip.recruit}" class="tooltip"></th>
+                        <th colspan="4">KÃ©pzÃ©s bÃ³nusz<img src=${imageSrc.questionMark} title="${helpTooltip.recruit}" class="tooltip"></th>
                         <th class="space"></th>
-                        <th colspan="2">Bônus Mercado<img src=${imageSrc.questionMark} title="${helpTooltip.market}" class="tooltip"></th>
+                        <th colspan="2">Piac bÃ³nusz<img src=${imageSrc.questionMark} title="${helpTooltip.market}" class="tooltip"></th>
                         <th class="space"></th>
-                        <th colspan="2">Bônus Armazém<img src=${imageSrc.questionMark} title="${helpTooltip.storage}" class="tooltip"></th>
+                        <th colspan="2">RaktÃ¡r bÃ³nusz<img src=${imageSrc.questionMark} title="${helpTooltip.storage}" class="tooltip"></th>
                     </tr>
                     <tr>
 				        <td><img src=${imageSrc.barracks}><input class="bon" id="barracksBonus" type="number" min="0" max="500" value="0"></td>
@@ -532,19 +535,19 @@ content = `
                 <tbody>
                     <tr>
                         <td>
-                            <label for="sablon">Perfis: </label>
+                            <label for="sablon">Profilok: </label>
                             <select id="sablon">
-                                <option selected hidden>opções</option>
+                                <option selected hidden>opciÃ³k</option>
                             </select>
                             &nbsp;
-                            <input type="button" value="Salvar" onclick="store()">
+                            <input type="button" value="MentÃ©s" onclick="store()">
                             &nbsp;
-                            <input type="button" value="Excluir" onclick="removeOptions()">
+                            <input type="button" value="TÃ¶rlÃ©s" onclick="removeOptions()">
                             &nbsp;
-                            <input type="button" value="Exportar" onclick="exports()">
+                            <input type="button" value="Export" onclick="exports()">
                             &nbsp;
-                            <input type="button" value="Importar" onclick="imports()">
-                            <b><code>Criado por <a href="${forumURL}" target="_blank">öreg</a></code></b>
+                            <input type="button" value="Import" onclick="imports()">
+                            <b><code>Created by <a href="${forumURL}" target="_blank">Ã¶reg</a></code></b>
                         </td>
                     </tr>
 		        </tbody>
@@ -554,50 +557,50 @@ content = `
 	        <table class="inlineTable modesb">
 		        <tbody>
 			        <tr>
-				        <th colspan="2">Info da Aldeia</th>
+				        <th colspan="2">Ã‰pÃ¼letek tulajdonsÃ¡gai</th>
 			        </tr>
 			        <tr>
-				        <td style="width: 50%"><img src=${imageSrc.header}>Capacidade Pop.</td>
+				        <td style="width: 50%"><img src=${imageSrc.header}>Tanya fÃ©rÅ‘hely</td>
 				        <td class="property" id="population" style="width: 50%">0</td>
 			        </tr>
 			        <tr>
-				        <td style="width: 50%"><img src=${imageSrc.header}>População Ocupada</td>
+				        <td style="width: 50%"><img src=${imageSrc.header}>NÃ©pessÃ©g-foglalt fÃ©rÅ‘hely</td>
 				        <td class="property" id="locked" style="width: 50%">0</td>
 			        </tr>
 			        <tr>
-				        <td style="width: 50%"><img src=${imageSrc.header}>População Livre</td>
+				        <td style="width: 50%"><img src=${imageSrc.header}>NÃ©pessÃ©g-mÃ©g szabad fÃ©rÅ‘hely</td>
 				        <td class="property" id="free" style="width: 50%">0</td>
 			        </tr>
 			        <tr>
-				        <td style="width: 50%"><img src=${imageSrc.gold}>Pontos</td>
+				        <td style="width: 50%"><img src=${imageSrc.gold}>Pontok</td>
 				        <td class="property" id="sumPoints" style="width: 50%">0</td>
 			        </tr>
 			        <tr>
-				        <td style="width: 50%"><img src=${imageSrc.hide}>Recursos Escondidos</td>
+				        <td style="width: 50%"><img src=${imageSrc.hide}>Rejtett nyersanyagok</td>
 				        <td class="property" id="hiddenResources" style="width: 50%">0</td>
 			        </tr>
 			        <tr>
-				        <td style="width: 50%"><img src=${imageSrc.market}>Mercadores</td>
+				        <td style="width: 50%"><img src=${imageSrc.market}>KereskedÅ‘k szÃ¡ma</td>
 				        <td class="property" id="merchants" style="width: 50%">0</td>
 			        </tr>
 			        <tr>
-				        <td style="width: 50%"><img src=${imageSrc.warehouse}>Capacidade Armazém</td>
+				        <td style="width: 50%"><img src=${imageSrc.warehouse}>RaktÃ¡r kapacitÃ¡s</td>
 				        <td class="property" id="capacity" style="width: 50%">0</td>
 			        </tr>
 			        <tr>
-				        <td style="width: 50%"><img src=${imageSrc.wall}>Bônus de Muralha</td>
+				        <td style="width: 50%"><img src=${imageSrc.wall}>Fal vÃ©delmi bÃ³nusz</td>
 				        <td class="property" id="wallBonus" style="width: 50%">0</td>
 			        </tr>
 			        <tr>
-				        <td style="width: 50%"><img src=${imageSrc.timber_camp}>Produção Madeira</td>
+				        <td style="width: 50%"><img src=${imageSrc.timber_camp}>Fa termelÃ©s</td>
 				        <td class="property" id="woodProd" style="width: 50%">0</td>
 			        </tr>
 			        <tr>
-				        <td style="width: 50%"><img src=${imageSrc.clay_pit}>Produção Argila</td>
+				        <td style="width: 50%"><img src=${imageSrc.clay_pit}>Agyag termelÃ©s</td>
 				        <td class="property" id="stoneProd" style="width: 50%">0</td>
 			        </tr>
 			        <tr>
-				        <td style="width: 50%"><img src=${imageSrc.iron_mine}>Produção Ferro</td>
+				        <td style="width: 50%"><img src=${imageSrc.iron_mine}>Vas termelÃ©s</td>
 				        <td class="property" id="ironProd" style="width: 50%">0</td>
 			        </tr>
                     <tr class="separator" />
@@ -606,14 +609,14 @@ content = `
             <table class="inlineTable modesc">
                 <tbody>
 			        <tr>
-				        <th colspan="6">Custos Totais</th>
+				        <th colspan="6">KÃ¶ltsÃ©gek</th>
 			        </tr>
 			        <tr>
-				        <td>Unidades</td>
+				        <td>EgysÃ©gek</td>
 				        <td></td>
-				        <td>Edifícios</td>
+				        <td>Ã‰pÃ¼letek</td>
 				        <td></td>
-				        <td>Total</td>
+				        <td>Teljes</td>
 				        <td></td>
 			        </tr>
 			        <tr>
@@ -649,30 +652,30 @@ content = `
 let player = game_data.player.name;
 let world = game_data.world;
 let script = {
-        name: "Simulador de Unidades e Edifícios",
-        version: "v1.5 PT"
+        name: "Unit and building simulator",
+        version: "v1.5"
 }
 let issue = {
-    text: ["|Jogador|Mundo|Nome Script|Versão|",
+    text: ["|Player|World|Script name|Script version|",
            "|---|---|---|---|",
            `|${player}|${world}|${script.name}|${script.version}|`,
            "",
-           "Problema:"].join("\n")
+           "Issue:"].join("\n")
 };
 
 function sendMessage() {
-    createIssue("Relatorio","oreg-kh","erro/obs",issue.text,token)
+    createIssue("Hibabejelentesek","oreg-kh","hiba/Ã©szrevÃ©tel",issue.text,token)
 }
 
 sideBarHTML = `
     <div class="gear" onclick="openNav()"><img src=${gear}></div>
     <div id="mySidenav" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <textarea id="issueText" placeholder="Descreva o problema..." rows="10" cols="50"></textarea>
-        <button id="sendIssue" type="button" onclick="sendMessage()">Enviar</button>
+        <textarea id="issueText" placeholder="Hiba leÃ­rÃ¡sa..." rows="10" cols="50"></textarea>
+        <button id="sendIssue" type="button" onclick="sendMessage()">KÃ¼ldÃ©s</button>
         </br>
-        <textarea id="imageURL" placeholder="Link da imagem" rows="1" cols="50"></textarea>
-        <button id="addURL" type="button" onclick="addURL()">Adicionar</button>
+        <textarea id="imageURL" placeholder="KÃ©p link" rows="1" cols="50"></textarea>
+        <button id="addURL" type="button" onclick="addURL()">HozzÃ¡adÃ¡s</button>
     </div>
 `;
 
@@ -705,9 +708,9 @@ function createIssue(repoName, repoOwner, issueTitle, issueBody, accessToken) {
             body: issueBody +"\n" + text
         }),
         success: function(msg){
-            UI.SuccessMessage("Mensagem enviada com sucesso!", 5000);        },
+            UI.SuccessMessage("Az Ã¼zeneted sikeresen tovÃ¡bbÃ­tottuk!", 5000);        },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
-            UI.ErrorMessage("Erro ao enviar os dados!", 5000);
+            UI.ErrorMessage("Valami hiba tÃ¶rtÃ©nt, nem sikerÃ¼lt elkÃ¼ldeni az adatokat!", 5000);
         }
     })
 }
@@ -763,6 +766,7 @@ function parseData(name) {
     return new DOMParser().parseFromString(getStorage(name), 'text/html');
 }
 
+// Ã©pÃ¼letinformÃ¡ciÃ³k lekÃ©rdezÃ©se, Ã³rÃ¡nkÃ©nt max 1x
 function getBuildingsInformation() {
 		return setServerDataInStorage("buildingsConfig", $.ajax({
 			url: `https://${document.domain}/interface.php?func=get_building_info`,
@@ -771,6 +775,7 @@ function getBuildingsInformation() {
 			success: function(xml) {},
 			error: function(xhr, statusText, error) {
 				$(".popup_box_container").remove();
+				console.log(errorText.buildings + error);
 				UI.ErrorMessage(errorText.buildings + error,8000);
 			}
 		}))
@@ -801,6 +806,7 @@ async function buildingsInformation() {
     }
 }
 
+// egysÃ©g informÃ¡ciÃ³k lekÃ©rdezÃ©se
 function getUnitsInformation() {
         return setServerDataInStorage("unitsConfig", $.ajax({
 			url: `https://${document.domain}/interface.php?func=get_unit_info`,
@@ -809,6 +815,7 @@ function getUnitsInformation() {
 			success: function(xml) {},
 			error: function(xhr, statusText, error) {
 				$(".popup_box_container").remove();
+				console.log(errorText.units + error);
 				UI.ErrorMessage(errorText.units + error,8000);
 			}
 		}))
@@ -840,6 +847,7 @@ async function unitsInformation() {
     return true;
 }
 
+// szerver sebessÃ©g lekÃ©rdezÃ©se, Ã³rÃ¡nkÃ©nt max 1x
 function getConfigInformation() {
         return setServerDataInStorage("configConfig", $.ajax({
 			url: `https://${document.domain}/interface.php?func=get_config`,
@@ -848,6 +856,7 @@ function getConfigInformation() {
 			success: function(xml) {},
 			error: function(xhr, statusText, error) {
 				$(".popup_box_container").remove();
+				console.log(errorText.speed + error);
 				UI.ErrorMessage(errorText.speed + error,8000);
 			}
 		}))
@@ -864,6 +873,7 @@ async function configInformation() {
     Object.defineProperty(obj.world, "worldSpeed", {value:config});
 }
 
+// egysÃ©g kÃ¶ltsÃ©g lekÃ©rdezÃ©se
 function getUnitsResources() {
         return new Promise(function(resolve, reject) {
             TribalWars.get("api", {ajax: "data", screen: "unit_info"}, resolve, reject)
@@ -873,6 +883,7 @@ function getUnitsResources() {
                 setServerDataInStorage("resourceConfig", result);
         },  function(error) {    
 				$(".popup_box_container").remove();
+				console.log(errorText.unitsCost);
 				UI.ErrorMessage(errorText.unitsCost,8000);
         })
 }
@@ -891,6 +902,7 @@ async function unitsResources() {
     }
 }
 
+// style hozzÃ¡adÃ¡sa a HTML-hez
 function initCss(css) {
     $(`<style>${css}</style>`).appendTo("body");
 }
@@ -1059,22 +1071,25 @@ initCss(`
     }
 `);
 
+// Ãºj opciÃ³ hozzÃ¡adÃ¡sa a legÃ¶rdÃ¼lÅ‘ listÃ¡hoz
 function createOption(option_name) {
   $("#sablon").append(`<option>${option_name}</option>`)
 }
 
+// eltÃ¡rolja az inputokat egy tÃ¶mbben
 function getAllInputValue() {
     var array = [];
     for (var i = 0; i < 48; i++) {
         array.push($("#myTable").find("input").eq(i).val());
     }
-    var name = prompt("Digite um nome para salvar seu perfil:");
+    var name = prompt("KÃ©rlek add meg milyen nÃ©ven szeretnÃ©d menteni a beÃ¡llÃ­tÃ¡saidat!");
     return {array,name}
 }
 
+// eltÃ¡rolja az inputokat localStorage-ban, hozzÃ¡ad egy Ãºj opciÃ³t a profilokhoz
 function store() {
     var pre = getAllInputValue();
-    name = "öregsaver_" + pre.name;
+    name = "Ã¶regsaver_" + pre.name;
     var object = {
             "inputs":    pre.array
     };
@@ -1082,48 +1097,53 @@ function store() {
     createOption(pre.name);
 }
 
+// profilok betÃ¶ltÃ©se a legÃ¶rdÃ¼lÅ‘ listÃ¡ba
 function loadSelectMenu() {
     for(var key in localStorage) {
-        if (key.includes("öregsaver")) {
+        if (key.includes("Ã¶regsaver")) {
             createOption(key.split("_")[1]);
         }
     }
 }
 
+// a kivÃ¡lasztott elem eltÃ¡volÃ­tÃ¡sa a legÃ¶rdÃ¼lÅ‘ listÃ¡bÃ³l
 function removeOptions() {
     var item = $("#sablon").find(":selected");
     var optionName = item.text();
     item.remove();
     for(var key in localStorage) {
-        if (key == `öregsaver_${optionName}`) {
+        if (key == `Ã¶regsaver_${optionName}`) {
             localStorage.removeItem(key);
         }
     } 
 }
 
+// a kivÃ¡lasztott profil exportÃ¡lÃ¡sa
 function exports() {
     var item = $("#sablon").find(":selected");
     var optionName = item.text();
-    if (optionName != "opções") {
-        var val = localStorage.getItem(`öregsaver_${optionName}`);
+    if (optionName != "opciÃ³k") {
+        var val = localStorage.getItem(`Ã¶regsaver_${optionName}`);
         var key = optionName;
         prompt(prompts.text,key + "," + val);
     }
 }
 
+// profil importÃ¡lÃ¡sa
 function imports() {
-    var importCode = prompt("Cole o código recebido na exportação:");
+    var importCode = prompt("Illeszd be az exportÃ¡lÃ¡skor kapott kÃ³dot:");
     var key = importCode.split(",")[0];
     var val = importCode.split(",")[1];
-    localStorage.setItem(`öregsaver_${key}`, val);
+    localStorage.setItem(`Ã¶regsaver_${key}`, val);
     createOption(key);
 }
 
+// esemÃ©nykezelÅ‘ a profil kivÃ¡lasztÃ¡sakor
 $("#sablon").on("click", function(event) {
     var item = $("#sablon").find(":selected");
     var optionName = item.text();
-    if (optionName != "opções") {
-        var val = localStorage.getItem(`öregsaver_${optionName}`);
+    if (optionName != "opciÃ³k") {
+        var val = localStorage.getItem(`Ã¶regsaver_${optionName}`);
         var inputs = JSON.parse(atob(val)).inputs;
         for (var i = 0; i < 48; i++) {
             $("#myTable").find("input").eq(i).val(inputs[i]);
@@ -1134,14 +1154,17 @@ $("#sablon").on("click", function(event) {
     buildingsAndUnitsFunctions();
 })
 
+// Ã¼zenet lÃ©trehozÃ¡sa
 function createMessage(type,message,time) {
     UI[type](message,time);
 }
 
+// visszaadja, hogy teljesÃ¼lt-e az Ã©pÃ­tÃ©shez szÃ¼ksÃ©ges elÅ‘feltÃ©tel
 function buildingsLevel(building,level) {
     return Number($("#" + building).val()) >= level;
 }
 
+// engedÃ©lyezi az egysÃ©get, ha a kÃ©pzÃ©shez szÃ¼ksÃ©ges elÅ‘feltÃ©telek teljesÃ¼ltek, amelyik egysÃ©g nem lÃ©tezik a szerveren, azt nem oldja fel
 function enableUnit(unit) {
     if (obj.unitsObj[unit].exist === false) {
         return document.getElementById(unit).disabled = true;
@@ -1150,6 +1173,7 @@ function enableUnit(unit) {
     }
 }
 
+// engedÃ©lyezi az Ã©pÃ¼letet, ha az Ã©pÃ­tÃ©shez szÃ¼ksÃ©ges elÅ‘feltÃ©telek teljesÃ¼ltek, amelyik Ã©pÃ¼let nem lÃ©tezik a szerveren, azt nem oldja fel
 function enableBuilding(building) {
     if (obj.buildingsObj[building].exist === false) {
         return document.getElementById(building).disabled = true;
@@ -1161,10 +1185,12 @@ function enableBuilding(building) {
     }
 }
 
+// egysÃ©g letiltÃ¡sa
 function disableUnit(unit) {
     return document.getElementById(unit).disabled = true;
 }
 
+// Ã©pÃ¼let letiltÃ¡sa
 function disableBuilding(building) {
     if (building == "snob") {
         building = "academy";
@@ -1172,6 +1198,7 @@ function disableBuilding(building) {
     return document.getElementById(building).disabled = true;
 }
 
+// letilt minden egysÃ©get, kivÃ©ve a lÃ¡ndzsÃ¡st Ã©s a kardost, mert azoknak nincs elÅ‘feltÃ©tele Ã©s minden szerveren lÃ©teznek
 function resetUnit() {
     for (var i = 2; i < units.length-1; i++) {
         disableUnit(units[i]);
@@ -1179,6 +1206,7 @@ function resetUnit() {
 }
 resetUnit();
 
+// letilt minden Ã©pÃ¼letet, aminek van elÅ‘feltÃ©tele
 function resetBuilding() {
     var building = ["barracks", "stable", "garage", "church", "watchtower", "academy", "smith", "market", "wall"];
     for (var i = 0; i < building.length; i++) {
@@ -1187,6 +1215,7 @@ function resetBuilding() {
 }
 resetBuilding();
 
+// az Ã©pÃ¼let szintek fa kÃ¶ltsÃ©gÃ©t szÃ¡molja
 function woodCost() {
     for (var i = 0; i < buildings.length; i++) {
         building_level = Number($(".building").eq(i).val());
@@ -1201,6 +1230,7 @@ function woodCost() {
     }
 }
 
+// az Ã©pÃ¼let szintek agyag kÃ¶ltsÃ©gÃ©t szÃ¡molja
 function stoneCost() {
     for (var i = 0; i < buildings.length; i++) {
         building_level = Number($(".building").eq(i).val());
@@ -1215,6 +1245,7 @@ function stoneCost() {
     }
 }
 
+// az Ã©pÃ¼let szintek vas kÃ¶ltsÃ©gÃ©t szÃ¡molja
 function ironCost() {
     for (var i = 0; i < buildings.length; i++) {
         building_level = Number($(".building").eq(i).val());
@@ -1229,6 +1260,7 @@ function ironCost() {
     }
 }
 
+// az Ã©pÃ¼let szintek nÃ©pessÃ©g kÃ¶ltsÃ©gÃ©t szÃ¡molja
 function popCost() {
     for (var i = 0; i < buildings.length; i++) {
         building_level = Number($(".building").eq(i).val());
@@ -1244,6 +1276,7 @@ function popCost() {
     return true;
 }
 
+// az Ã©pÃ¼let szintek pontjÃ¡t szÃ¡molja
 function points() {
     for (var i = 0; i < buildings.length; i++) {
         building_level = Number($(".building").eq(i).val());
@@ -1258,6 +1291,7 @@ function points() {
     return true;
 }
 
+// a falu pontszÃ¡mÃ¡t szÃ¡molja
 async function sumPoints() {
     var result = await points();
     var sum = 0;
@@ -1268,6 +1302,7 @@ async function sumPoints() {
     $("#sumPoints").text(numberWithCommas(sum));
 }
 
+// a rejtekhely Ã¡ltal elrejtett nyersanyagokat szÃ¡molja
 function hiddenResources() {
     hide_level = Number($("#hide").val());
     if (hide_level == 0 || hide_level == "") {
@@ -1282,6 +1317,7 @@ function hiddenResources() {
     }
 }
 
+// a kereskedÅ‘k szÃ¡mÃ¡t szÃ¡molja
 function numberOfMerchants() {
     market_level = Number($("#market").val());
     if (market_level >= 10) {
@@ -1295,6 +1331,7 @@ function numberOfMerchants() {
     return text;
 }
 
+// a raktÃ¡r mÃ©retÃ©t szÃ¡molja
 function capacity() {
     warehouse_level = Number($("#warehouse").val());
     if (warehouse_level == 0 || warehouse_level == "") {
@@ -1306,12 +1343,14 @@ function capacity() {
     return text;
 }
 
+// a fal bÃ³nuszt szÃ¡molja
 function wallBonus() {
     wall_level = Number($("#wall").val());
     text = (Math.pow(1.037, wall_level) - 1) * 100;
     $("#wallBonus").text(roundToNearestInteger(text) + "%");
 }
 
+// a fa termelÃ©st szÃ¡molja
 function woodProd() {
     wood_level =  Number($("#timber_camp").val());
     if (wood_level == 0 || wood_level == "") {
@@ -1323,6 +1362,7 @@ function woodProd() {
     return {wood};
 }
 
+// a agyag termelÃ©st szÃ¡molja
 function stoneProd() {
     stone_level =  Number($("#clay_pit").val());
     if (stone_level == 0 || stone_level == "") {
@@ -1334,6 +1374,7 @@ function stoneProd() {
     return {stone};
 }
 
+// a vas termelÃ©st szÃ¡molja
 function ironProd() {
     iron_level =  Number($("#iron_mine").val());
     if (iron_level == 0 || iron_level == "") {
@@ -1345,6 +1386,7 @@ function ironProd() {
     return {iron};
 }
 
+// a tanyahelyet szÃ¡molja
 function population() {
     pop_level = Number($("#farm").val());
     if (pop_level == 0 || pop_level == "") {
@@ -1356,6 +1398,7 @@ function population() {
     return text;
 }
 
+// az egysÃ©gek kÃ©pzÃ©si idejÃ©t szÃ¡molja
 function buildTimeOfUnit() {
     barracks_level = Number($("#barracks").val());
     stable_level = Number($("#stable").val());
@@ -1417,6 +1460,7 @@ function buildTimeOfUnit() {
     return true
 }
 
+// az egysÃ©gek teherbÃ­rÃ¡sÃ¡t szÃ¡molja
 function unitsHaul() {
     barracks_level = Number($("#barracks").val());
     stable_level = Number($("#stable").val());
@@ -1477,6 +1521,7 @@ function unitsHaul() {
     }
 }
 
+// az egysÃ©gek Ã¡ltal lefoglalt tanyahelyet szÃ¡molja
 function unitsPop() {
     barracks_level = Number($("#barracks").val());
     stable_level = Number($("#stable").val());
@@ -1538,6 +1583,7 @@ function unitsPop() {
     return true
 }
 
+// Ã©pÃ¼letenkÃ©nt Ã¶sszegzi az egysÃ©gek kÃ©pzÃ©si idejÃ©t
 async function sumBuildTimeOfUnit() {
     var result = await buildTimeOfUnit();
     var seconds = 0;
@@ -1565,6 +1611,7 @@ async function sumBuildTimeOfUnit() {
     }
 }
 
+// a foglalt tanyahelyet szÃ¡molja
 async function lockedPop() {
     var lockedsum = 0;
     buildingpop = $(".popCost");
@@ -1583,16 +1630,20 @@ async function lockedPop() {
     return lockedsum;
 }
 
+// a szabad tanyahelyet szÃ¡molja
 async function freePop() {
     var res = await popBonus();
     var result = await lockedPop();
     redClass();
     pop = roundDownToNearestInteger(res);
+
     locked = result;
+
     free = pop - locked;
     $("#free").text(numberWithCommas(free));
 }
 
+// ha a foglalt tanyahely nagyobb, mint a nÃ©pessÃ©g, akkor a foglalt Ã©s a szabad tanyahely szÃ¡ma pirosra vÃ¡lt
 function redClass() {
     var pop = Number($("#population").text().replace(".",""));
     var locked = Number($("#locked").text().replace(".",""));
@@ -1605,6 +1656,7 @@ function redClass() {
     }
 }
 
+// kereskedÅ‘ bÃ³nuszt szÃ¡molja
 async function marketBonus() {
     var merchants = await numberOfMerchants();
     var merchantsBonusVillage = Number($("#merchantsBonusVillage").val());
@@ -1613,6 +1665,7 @@ async function marketBonus() {
     $("#merchants").text(roundToNearestInteger(bonusMerchants));
 }
 
+// raktÃ¡rkapacitÃ¡s bÃ³nuszt szÃ¡molja
 async function storageBonus() {
     var storage = await capacity();
     var storageBonusVillage = Number($("#storageBonusVillage").val());
@@ -1621,6 +1674,7 @@ async function storageBonus() {
     $("#capacity").text(numberWithCommas(roundToNearestInteger(bonusStorage)));
 }
 
+// fosztogatÃ¡s bÃ³nuszt szÃ¡molja
 async function haulBonus() {
     var result = await unitsHaul();
     var haul = $(".haul");
@@ -1633,6 +1687,7 @@ async function haulBonus() {
     }
 }
 
+// nÃ©pessÃ©g bÃ³nuszt szÃ¡molja
 async function popBonus() {
     var result = await population();
     var popBonusVillage = Number($("#popBonusVillage").val());
@@ -1644,6 +1699,7 @@ async function popBonus() {
     return newPop;
 }
 
+// kÃ©pzÃ©si bÃ³nuszt szÃ¡molja
 function recruitBonus() {
     var barracksBonus = 1 + Number($("#barracksBonus").val()) / 100;
     var stableBonus = 1 + Number($("#stableBonus").val()) / 100;
@@ -1652,6 +1708,7 @@ function recruitBonus() {
     return {barracksBonus, stableBonus, garageBonus, academyBonus}
 }
 
+// termelÃ©s bÃ³nuszt szÃ¡molja
 async function resourceBonus() {
     var woodBaseProd = await woodProd();
     var stoneBaseProd = await stoneProd();
@@ -1675,6 +1732,7 @@ async function resourceBonus() {
     $("#ironProd").text(numberWithCommas(roundToNearestInteger(bonusIronProduction)));
 }
 
+// az egysÃ©gek kÃ¶ltsÃ©gÃ©t szÃ¡molja
 function unitsCost() {
     var wood = 0;
     var stone = 0;
@@ -1693,6 +1751,7 @@ function unitsCost() {
     return {wood, stone, iron}
 }
 
+// az Ã©pÃ¼letek kÃ¶ltsÃ©gÃ©t szÃ¡molja
 function buildingsCost() {
     var wood = 0;
     var stone = 0;
@@ -1741,6 +1800,7 @@ function buildingsCost() {
     return {wood, stone, iron}
 }
 
+// az Ã©pÃ¼letek Ã©s az egysÃ©gek kÃ¶ltsÃ©gÃ©t Ã¶sszegzi
 async function sumUnitsAndBuildingsCost() {
     var buildings = await buildingsCost();
     currentBuildingsCost();
@@ -1754,6 +1814,7 @@ async function sumUnitsAndBuildingsCost() {
     $("#sumUnitsAndBuildingsIronCost").text(numberWithCommas(Math.round(iron)));
 }
 
+// aktuÃ¡lis Ã©pÃ¼let szintek kÃ¶ltsÃ©gei
 function currentBuildingsCost() {
     var woodCost = $(".woodCost");
     var stoneCost = $(".stoneCost");
@@ -1771,11 +1832,13 @@ function currentBuildingsCost() {
     $("#currentBuildingsIronCost").text(numberWithCommas(iron));
 }
 
+// ss Ã¡tvÃ¡ltÃ¡sa nn:Ã³Ã³:pp:ss
 function secondsToDhms(seconds) {
     var d = Math.floor(seconds / (3600*24));
     var h = Math.floor(seconds % (3600*24) / 3600);
     var m = Math.floor(seconds % 3600 / 60);
     var s = Math.floor(seconds % 60);
+
     var dDisplay = (d < 10) ? "0" + d + ":" : d + ":";
     var hDisplay = (h < 10) ? "0" + h + ":" : h + ":";
     var mDisplay = (m < 10) ? "0" + m + ":" : m + ":";
@@ -1783,55 +1846,74 @@ function secondsToDhms(seconds) {
     return dDisplay + hDisplay + mDisplay + sDisplay;
 }
 
-function roundToNearestFive(number) { return Math.ceil(number/5)*5; }
-function roundToNearestInteger(number) { return Math.round(number); }
-function roundDownToNearestInteger(number) { return Math.floor(number); }
-function roundUpToNearestInteger(number) { return Math.ceil(number); }
+function roundToNearestFive(number) {
+    return Math.ceil(number/5)*5;
+}
 
+function roundToNearestInteger(number) {
+    return Math.round(number);
+}
+
+function roundDownToNearestInteger(number) {
+    return Math.floor(number);
+}
+
+function roundUpToNearestInteger(number) {
+    return Math.ceil(number);
+}
+
+// szÃ¡mok tagolÃ¡sa "."-tal
 function numberWithCommas(x) {
     var parts = x.toString().split(".");
     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     return parts.join(".");
 }
 
-function byebye() { createMessage("SuccessMessage","Até a próxima!",2000) }
+function byebye() {
+    createMessage("SuccessMessage","ViszlÃ¡t legkÃ¶zelebb!",2000)
+}
 
 function buildingsFunctions() {
-    select();
-    woodCost();
-    stoneCost();
-    ironCost();
-    popCost();
-    sumPoints();
-    hiddenResources();
-    wallBonus();
-    marketBonus();
-    storageBonus();
-    resourceBonus();
+    select(); // OK
+    woodCost(); // OK
+    stoneCost(); // OK
+    ironCost(); // OK
+    popCost(); // OK
+    sumPoints(); // OK
+    hiddenResources(); // OK
+    wallBonus(); // OK
+    marketBonus(); // OK
+    storageBonus(); // OK
+    resourceBonus(); // OK
 }
 
 function unitsFunctions() {
-    unitsPop();
-    sumBuildTimeOfUnit();
-    haulBonus();
+    unitsPop(); // OK
+    sumBuildTimeOfUnit(); // OK
+    haulBonus(); // OK
 }
 
 function buildingsAndUnitsFunctions() {
-    freePop();
-    sumUnitsAndBuildingsCost();
+    freePop(); // OK
+    sumUnitsAndBuildingsCost(); // OK
 }
 
 function spinMainIcon(durationMs, deg) {
     $({deg: 0}).animate({deg: deg}, {
         duration: durationMs,
         step: (angle) => {
-            $(".gear img").css({ transform: 'rotate(' + angle + 'deg)' });
+            $(".gear img").css({
+                transform: 'rotate(' + angle + 'deg)'
+            });
         }
     });
 }
 
-$(".gear").find("img").on("click", function(event) { spinMainIcon(500, -180); })
+$(".gear").find("img").on("click", function(event) {
+    spinMainIcon(500, -180);
+})
 
+// Ã©pÃ¼let szint esemÃ©nykezelÅ‘
 $(".building, .unit, .bon").on("keyup input", function(event) {
     var classname = event.target.className;
     var value = event.target.valueAsNumber;
@@ -1843,9 +1925,15 @@ $(".building, .unit, .bon").on("keyup input", function(event) {
    
     if (regExp.test(val) || value > max || value < min || ((keyCode < 7 || keyCode > 9) && (keyCode < 48 || keyCode > 57) && (keyCode < 96 || keyCode > 105))) {
         event.target.value = "";
-        if (classname == "building") { createMessage("ErrorMessage",`Nível inválido! Mín: ${min}, Máx: ${max}`,1500); }
-        if (classname == "unit") { createMessage("ErrorMessage",`Quantia inválida! Mín: ${min}, Máx: ${max}`,1500); }
-        if (classname == "bon") { createMessage("ErrorMessage",`Valor inválido! Mín: ${min}, Máx: ${max}`,1500); }
+        if (classname == "building") {
+            createMessage("ErrorMessage",`Az Ã©pÃ¼letnek nincs ilyen szintje! Minimum: ${min}, Maximum: ${max}`,1500);
+        }
+        if (classname == "unit") {
+            createMessage("ErrorMessage",`HibÃ¡s darabszÃ¡mot adtÃ¡l meg! Minimum: ${min}, Maximum: ${max}`,1500);
+        }
+        if (classname == "bon") {
+            createMessage("ErrorMessage",`HibÃ¡s Ã©rtÃ©ket adtÃ¡l meg! Minimum: ${min}, Maximum: ${max}`,1500);
+        }
     } else {
         if (classname == "building") {
             buildingsFunctions();
@@ -1864,6 +1952,7 @@ $(".building, .unit, .bon").on("keyup input", function(event) {
     }
 })
 
+// minimum rÃ¡diÃ³gomb esemÃ©nykezelÅ‘
 function minimum() {
     for (var i = 0; i < buildings.length; i++) {
         min_level = obj.buildingsObj[buildings[i]].min_level;
@@ -1874,6 +1963,7 @@ function minimum() {
     buildingsAndUnitsFunctions();
 }
 
+// maximum rÃ¡diÃ³gomb esemÃ©nykezelÅ‘
 function maximum() {
     for (var i = 0; i < buildings.length; i++) {
         max_level = obj.buildingsObj[buildings[i]].max_level;
@@ -1884,25 +1974,102 @@ function maximum() {
     buildingsAndUnitsFunctions();
 }
 
+// Ã©pÃ¼letek Ã©s egysÃ©gek elÅ‘feltÃ©teleinek vizsgÃ¡lata
 function select() {
-    if (buildingsLevel("headquarters",3)) { enableBuilding("barracks"); } else { disableBuilding("barracks"); }
-    if (buildingsLevel("headquarters",10) && buildingsLevel("barracks",5) && buildingsLevel("smith",5)) { enableBuilding("stable"); } else { disableBuilding("stable"); }
-    if (buildingsLevel("headquarters",10) && buildingsLevel("smith",10)) { enableBuilding("garage"); } else { disableBuilding("garage"); }
-    if (buildingsLevel("headquarters",5) && buildingsLevel("farm",5)) { enableBuilding("church"); } else { disableBuilding("church"); }
-    if (buildingsLevel("headquarters",20) && buildingsLevel("smith",20) && buildingsLevel("market",10)) { enableBuilding("snob"); } else { disableBuilding("snob"); }
-    if (buildingsLevel("headquarters",5) && buildingsLevel("barracks",1)) { enableBuilding("smith"); } else { disableBuilding("smith"); }
-    if (buildingsLevel("headquarters",3) && buildingsLevel("warehouse",2)) { enableBuilding("market"); } else { disableBuilding("market"); }
-    if (buildingsLevel("barracks",1)) { enableBuilding("wall"); } else { disableBuilding("wall"); }
-    if (buildingsLevel("headquarters",5) && buildingsLevel("farm",5)) { enableBuilding("watchtower"); } else { disableBuilding("watchtower"); }
-    if (buildingsLevel("smith",2)) { enableUnit("axe"); } else { disableUnit("axe"); }
-    if (buildingsLevel("barracks",5) && buildingsLevel("smith",5)) { enableUnit("archer"); } else { disableUnit("archer"); }
-    if (buildingsLevel("stable",1)) { enableUnit("spy"); } else { disableUnit("spy"); }
-    if (buildingsLevel("stable",3)) { enableUnit("light"); } else { disableUnit("light"); }
-    if (buildingsLevel("stable",5)) { enableUnit("marcher"); } else { disableUnit("marcher"); }
-    if (buildingsLevel("stable",10) && buildingsLevel("smith",15)) { enableUnit("heavy"); } else { disableUnit("heavy"); }
-    if (buildingsLevel("garage",1)) { enableUnit("ram"); } else { disableUnit("ram"); }
-    if (buildingsLevel("garage",2) && buildingsLevel("smith",12)) { enableUnit("catapult"); } else { disableUnit("catapult"); }
-    if (buildingsLevel("statue",1)) { enableUnit("knight"); } else { disableUnit("knight"); }
-    if (buildingsLevel("academy",1) && buildingsLevel("headquarters",20) && buildingsLevel("smith",20) && buildingsLevel("market",10)) { enableUnit("snob"); } else { disableUnit("snob"); }
+    if (buildingsLevel("headquarters",3)) {
+        enableBuilding("barracks");
+    } else {
+        disableBuilding("barracks");
+    }
+    if (buildingsLevel("headquarters",10) && buildingsLevel("barracks",5) && buildingsLevel("smith",5)) {
+        enableBuilding("stable");
+    } else {
+        disableBuilding("stable");
+    }
+    if (buildingsLevel("headquarters",10) && buildingsLevel("smith",10)) {
+        enableBuilding("garage");
+    } else {
+        disableBuilding("garage");
+    }
+    if (buildingsLevel("headquarters",5) && buildingsLevel("farm",5)) {
+        enableBuilding("church");
+    } else {
+        disableBuilding("church");
+    }
+    if (buildingsLevel("headquarters",20) && buildingsLevel("smith",20) && buildingsLevel("market",10)) {
+        enableBuilding("snob");
+    } else {
+        disableBuilding("snob");
+    }
+    if (buildingsLevel("headquarters",5) && buildingsLevel("barracks",1)) {
+        enableBuilding("smith");
+    } else {
+        disableBuilding("smith");
+    }
+    if (buildingsLevel("headquarters",3) && buildingsLevel("warehouse",2)) {
+        enableBuilding("market");
+    } else {
+        disableBuilding("market");
+    }
+    if (buildingsLevel("barracks",1)) {
+        enableBuilding("wall");
+    } else {
+        disableBuilding("wall");
+    }
+    if (buildingsLevel("headquarters",5) && buildingsLevel("farm",5)) {
+        enableBuilding("watchtower");
+    } else {
+        disableBuilding("watchtower");
+    }
+    if (buildingsLevel("smith",2)) {
+        enableUnit("axe");
+    } else {
+        disableUnit("axe");
+    }
+    if (buildingsLevel("barracks",5) && buildingsLevel("smith",5)) {
+        enableUnit("archer");
+    } else {
+        disableUnit("archer");
+    }
+    if (buildingsLevel("stable",1)) {
+        enableUnit("spy");
+    } else {
+        disableUnit("spy");
+    }
+    if (buildingsLevel("stable",3)) {
+        enableUnit("light");
+    } else {
+        disableUnit("light");
+    }
+    if (buildingsLevel("stable",5)) {
+        enableUnit("marcher");
+    } else {
+        disableUnit("marcher");
+    }
+    if (buildingsLevel("stable",10) && buildingsLevel("smith",15)) {
+        enableUnit("heavy");
+    } else {
+        disableUnit("heavy");
+    }
+    if (buildingsLevel("garage",1)) {
+        enableUnit("ram");
+    } else {
+        disableUnit("ram");
+    }
+    if (buildingsLevel("garage",2) && buildingsLevel("smith",12)) {
+        enableUnit("catapult");
+    } else {
+        disableUnit("catapult");
+    }
+    if (buildingsLevel("statue",1)) {
+        enableUnit("knight");
+    } else {
+        disableUnit("knight");
+    }
+    if (buildingsLevel("academy",1) && buildingsLevel("headquarters",20) && buildingsLevel("smith",20) && buildingsLevel("market",10)) {
+        enableUnit("snob");
+    } else {
+        disableUnit("snob");
+    }
 }
 void(0);
